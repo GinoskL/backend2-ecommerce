@@ -1,0 +1,37 @@
+{
+  "name": "backend-node-express-mongo",
+  "version": "3.0.0",
+  "description": "Backend puro Node.js + Express + MongoDB sin frontend",
+  "type": "module",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "nodemon src/app.js",
+    "start": "node src/app.js",
+    "seed": "node src/scripts/seed.js"
+  },
+  "keywords": ["nodejs", "express", "mongodb", "api", "backend"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.5.3",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "passport-jwt": "^4.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "nodemailer": "^6.9.14",
+    "morgan": "^1.10.0",
+    "cors": "^2.8.5",
+    "uuid": "^9.0.1",
+    "express-validator": "^7.0.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
