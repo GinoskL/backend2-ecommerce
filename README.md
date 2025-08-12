@@ -1,130 +1,214 @@
-# Backend Node.js + Express + MongoDB
+---
 
-Backend API puro sin frontend. Sistema completo de e-commerce con autenticación JWT, gestión de productos, carritos y tickets.
+# 📄 README - Backend Ecommerce
 
-## 🚀 Características
+## 📌 Descripción
 
-- ✅ **API REST** completa
-- ✅ **Autenticación JWT** con Passport
-- ✅ **Base de datos MongoDB** con Mongoose
-- ✅ **Validaciones robustas** con express-validator
-- ✅ **Logging avanzado** con Winston
-- ✅ **Envío de emails** con Nodemailer
-- ✅ **Arquitectura por capas** (DAO, Repository, Service)
-- ✅ **Manejo de errores** centralizado
-- ✅ **Rate limiting** básico
-- ✅ **Script de seed** para datos iniciales
+Este proyecto es un **servidor backend puro** para un e-commerce, desarrollado en **Node.js + Express + MongoDB Atlas**.
+Implementa autenticación con **Passport + JWT**, manejo de roles, persistencia con **DAO, DTO y Repository**, y lógica de compra con generación de tickets.
 
-## 📋 Instalación
+---
 
-\`\`\`bash
-# 1. Clonar o crear carpeta
-mkdir backend-ecommerce
-cd backend-ecommerce
+## 🚀 Instalación y Configuración
 
-# 2. Instalar dependencias
+### 1️⃣ Clonar el repositorio
+
+```bash
+git clone <url-del-repo>
+cd <nombre-del-proyecto>
+```
+
+### 2️⃣ Instalar dependencias
+
+```bash
 npm install
+```
 
-# 3. Configurar variables de entorno
-cp .env.example .env
-# Editar .env con tus credenciales
+### 3️⃣ Configurar variables de entorno
 
-# 4. Poblar base de datos (opcional)
-npm run seed
+Crear un archivo `.env` en la raíz con:
 
-# 5. Ejecutar servidor
-npm run dev  # Desarrollo
-npm start    # Producción
-\`\`\`
+```env
+PORT=8080
+MONGO_URI=mongodb+srv://<usuario>:<contraseña>@<cluster>.mongodb.net/ecommerce
+JWT_SECRET=claveSuperSecreta
+```
 
-## 🔗 Endpoints API
+💡 **Importante:**
+En MongoDB Atlas, configurar **Network Access** con `0.0.0.0/0` para permitir conexiones externas.
 
-### Autenticación
-\`\`\`
+### 4️⃣ Iniciar el servidor
+
+```bash
+npm run dev   # Modo desarrollo (nodemon)
+npm start     # Modo producción
+```
+
+Servidor corriendo en: `http://localhost:8080`
+
+---
+
+## 🗂 Estructura del Proyecto
+
+```
+src/
+├── app.js             # Punto de entrada
+├── config/            # Config DB, Passport, etc.
+├── controllers/       # Controladores de rutas
+├── daos/              # Data Access Objects
+├── dtos/              # Data Transfer Objects
+├── middlewares/       # Autenticación y autorización
+├── models/            # Modelos de Mongoose
+├── repositories/      # Capa Repository
+├── routes/            # Rutas agrupadas
+├── services/          # Lógica de negocio
+└── utils/             # Utilidades (hash, JWT, email)
+```
+
+---
+
+## 🔑 Roles y Autorización
+
+* **Admin** → puede crear, actualizar y eliminar productos.
+* **User** → puede agregar productos a su carrito y comprar.
+
+---
+
+## 📌 Endpoints Principales
+
+### 🧑‍💻 Autenticación
+
+#### Registrar usuario
+
+```http
 POST /api/sessions/register
-POST /api/sessions/login
-GET  /api/sessions/current
-\`\`\`
+```
 
-### Productos
-\`\`\`
-GET    /api/products
-GET    /api/products/:id
-POST   /api/products (admin)
-PUT    /api/products/:id (admin)
-DELETE /api/products/:id (admin)
-\`\`\`
-
-### Carritos
-\`\`\`
-POST /api/carts
-POST /api/carts/:cid/product/:pid
-POST /api/carts/:cid/purchase
-\`\`\`
-
-### Sistema
-\`\`\`
-GET /health
-GET /api
-\`\`\`
-
-## 🧪 Testing con Postman/Thunder Client
-
-1. **Registrar usuario:**
-\`\`\`json
-POST /api/sessions/register
+```json
 {
   "first_name": "Juan",
   "last_name": "Pérez",
-  "email": "juan@email.com",
+  "email": "juan@test.com",
   "age": 25,
   "password": "Password123!"
 }
-\`\`\`
+```
 
-2. **Login:**
-\`\`\`json
+#### Login
+
+```http
 POST /api/sessions/login
+```
+
+```json
 {
-  "email": "juan@email.com",
+  "email": "juan@test.com",
   "password": "Password123!"
 }
-\`\`\`
+```
 
-3. **Usar token en headers:**
-\`\`\`
-Authorization: Bearer YOUR_JWT_TOKEN
-\`\`\`
+#### Usuario actual (DTO)
 
-## 📁 Estructura del proyecto
+```http
+GET /api/sessions/current
+Authorization: Bearer <token>
+```
 
-\`\`\`
-src/
-├── app.js              # Punto de entrada
-├── config/             # Configuraciones
-├── controllers/        # Controladores
-├── daos/              # Data Access Objects
-├── dtos/              # Data Transfer Objects
-├── middlewares/       # Middlewares
-├── models/            # Modelos de Mongoose
-├── repositories/      # Capa de repositorio
-├── routes/            # Rutas de la API
-├── scripts/           # Scripts utilitarios
-├── services/          # Lógica de negocio
-├── utils/             # Utilidades
-└── validators/        # Validaciones
-\`\`\`
+---
 
-## 🔧 Scripts disponibles
+### 📦 Productos
 
-- \`npm run dev\` - Servidor con nodemon
-- \`npm start\` - Servidor producción
-- \`npm run seed\` - Poblar DB con datos
+* **Listar** → `GET /api/products`
+* **Obtener uno** → `GET /api/products/:id`
+* **Crear (Admin)** → `POST /api/products`
+* **Actualizar (Admin)** → `PUT /api/products/:id`
+* **Eliminar (Admin)** → `DELETE /api/products/:id`
 
-## 📊 Logs
+---
 
-- \`logs/error.log\` - Solo errores
-- \`logs/combined.log\` - Todos los logs
-- Consola - En desarrollo
+### 🛒 Carritos
 
-Servidor: \`http://localhost:8080\`
+* **Crear carrito** → `POST /api/carts`
+* **Agregar producto (User)** → `POST /api/carts/:cid/product/:pid`
+* **Finalizar compra (User)** → `POST /api/carts/:cid/purchase`
+
+---
+
+### 🎟 Tickets
+
+Al finalizar una compra exitosa, se genera un ticket con:
+
+* Código único
+* Fecha y hora
+* Total de la compra
+* Email del comprador
+
+---
+
+## 🧪 Guía de Pruebas con Postman
+
+1. **Health Check**
+
+```http
+GET /health
+```
+
+2. **Login Admin**
+
+```http
+POST /api/sessions/login
+{
+  "email": "admin@ecommerce.com",
+  "password": "Admin123!"
+}
+```
+
+Copiar el token para operaciones de admin.
+
+3. **Crear Producto (Admin)**
+
+```http
+POST /api/products
+Authorization: Bearer <token_admin>
+{
+  "title": "Laptop",
+  "description": "Laptop gamer",
+  "price": 1500,
+  "stock": 10,
+  "category": "electronics"
+}
+```
+
+4. **Registrar y loguear usuario normal**
+
+```http
+POST /api/sessions/register
+POST /api/sessions/login
+```
+
+Copiar token de usuario.
+
+5. **Crear carrito y agregar producto**
+
+```http
+POST /api/carts
+POST /api/carts/<cid>/product/<pid>
+```
+
+6. **Finalizar compra**
+
+```http
+POST /api/carts/<cid>/purchase
+```
+
+---
+
+## ✅ Checklist antes de entregar
+
+* [ ] `npm install` funciona sin errores
+* [ ] `.env` configurado con MONGO\_URI válido
+* [ ] Rutas de registro/login funcionan
+* [ ] Middleware de roles funcionando
+* [ ] DAO, DTO y Repository implementados
+* [ ] Compra genera ticket correctamente
+* [ ] El carrito se actualiza después de comprar
