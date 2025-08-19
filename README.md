@@ -1,9 +1,3 @@
-
-* Instrucciones paso a paso para instalar y probar.
-* Endpoints finales corregidos (los de carrito ahora son sin `:cid`).
-* Ejemplos listos para copiar/pegar en Postman.
-* Un flujo de pruebas completo que muestra que el sistema funciona.
-
 ---
 
 # 📦 Backend E-commerce – Node.js + Express + MongoDB
