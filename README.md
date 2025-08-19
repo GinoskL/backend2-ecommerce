@@ -1,5 +1,3 @@
----
-
 # 📦 Backend E-commerce – Node.js + Express + MongoDB
 
 Backend puro (sin frontend). API REST completa para un sistema de e-commerce con autenticación JWT, gestión de productos, carritos y tickets.
