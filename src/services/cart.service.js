@@ -91,6 +91,51 @@ class CartService {
 
     return result
   }
+
+  async removeProduct({ cid, pid }) {
+    const cart = await this.getCart(cid)
+
+    const productIndex = cart.products.findIndex((p) => p.product._id.toString() === pid)
+
+    if (productIndex === -1) {
+      const err = new Error("Producto no encontrado en el carrito")
+      err.status = 404
+      throw err
+    }
+
+    cart.products.splice(productIndex, 1)
+    const updated = await cartRepository.update(cart._id, { products: cart.products })
+    return updated
+  }
+
+  async updateProductQuantity({ cid, pid, quantity }) {
+    const cart = await this.getCart(cid)
+
+    const productIndex = cart.products.findIndex((p) => p.product._id.toString() === pid)
+
+    if (productIndex === -1) {
+      const err = new Error("Producto no encontrado en el carrito")
+      err.status = 404
+      throw err
+    }
+
+    const product = await productService.getById(pid)
+    if (quantity > product.stock) {
+      const err = new Error(`Stock insuficiente. Disponible: ${product.stock}`)
+      err.status = 400
+      throw err
+    }
+
+    cart.products[productIndex].quantity = quantity
+    const updated = await cartRepository.update(cart._id, { products: cart.products })
+    return updated
+  }
+
+  async clearCart(cid) {
+    const cart = await this.getCart(cid)
+    const updated = await cartRepository.update(cart._id, { products: [] })
+    return updated
+  }
 }
 
 export const cartService = new CartService()

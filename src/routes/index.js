@@ -5,7 +5,6 @@ import cartsRouter from "./carts.routes.js"
 
 const router = Router()
 
-// Información de la API
 router.get("/", (req, res) => {
   res.json({
     status: "success",
@@ -14,14 +13,13 @@ router.get("/", (req, res) => {
     endpoints: {
       auth: "/api/sessions",
       products: "/api/products",
-      carts: "/api/carts",
+      carts: "/api/carts (requiere autenticación)",
     },
     documentation: "Ver README.md para documentación completa",
     health: "/health",
   })
 })
 
-// Rutas principales
 router.use("/sessions", sessionsRouter)
 router.use("/products", productsRouter)
 router.use("/carts", cartsRouter)
